@@ -1,2 +1,2 @@
 # ovo_clone
-UI OVO Dessign Figma by Daffa Katianda
+UI OVO Design Figma by Daffa Katianda
