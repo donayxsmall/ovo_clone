@@ -1,4 +1,4 @@
-# ovo_clone
+# OVO CLONE
 
 Design By Daffa Katianda
 
