@@ -1,6 +1,8 @@
 // ignore_for_file: camel_case_types, prefer_typing_uninitialized_variables
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:ovo_clone/core.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -11,6 +13,7 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
+  final user = Prefs.getMap('user');
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -48,32 +51,38 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     ),
                     child: Row(
                       children: [
-                        const Padding(
-                          padding: EdgeInsets.all(10.0),
+                        Padding(
+                          padding: const EdgeInsets.all(10.0),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              CircleAvatar(
-                                backgroundImage: NetworkImage(
-                                  "https://i.ibb.co/PGv8ZzG/me.jpg",
+                              CachedNetworkImage(
+                                imageUrl: "https://i.ibb.co/PGv8ZzG/me.jpg",
+                                imageBuilder: (context, imageProvider) =>
+                                    CircleAvatar(
+                                  backgroundImage: imageProvider,
                                 ),
+                                placeholder: (context, url) =>
+                                    const CircularProgressIndicator(),
+                                errorWidget: (context, url, error) =>
+                                    const Icon(Icons.error),
                               ),
-                              SizedBox(
+                              const SizedBox(
                                 width: 20.0,
                               ),
                               Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                    "Donny Kusdianto",
-                                    style: TextStyle(
+                                    user['name'],
+                                    style: const TextStyle(
                                       fontSize: 12.0,
                                       fontWeight: FontWeight.bold,
                                       color: Color(0xff594C78),
                                       letterSpacing: 12 * 0.02,
                                     ),
                                   ),
-                                  Text(
+                                  const Text(
                                     "0895-7663-6036",
                                     style: TextStyle(
                                       fontSize: 12.0,
@@ -178,7 +187,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   backgroundColor: primaryColor,
                                   shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(20))),
-                              onPressed: () {},
+                              onPressed: () {
+                                Prefs.clear();
+                                context.goNamed('login');
+                              },
                               child: const Text("Sign Out",
                                   style: TextStyle(
                                     color: Colors.white,

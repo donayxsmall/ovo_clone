@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class OtpTextField extends StatefulWidget {
   const OtpTextField({
@@ -18,6 +19,7 @@ class _OtpTextFieldState extends State<OtpTextField> {
   late final List<FocusNode> focusNodes;
   late final List<TextEditingController> textControllers;
   late final List<String> otpValues;
+  final _numberFormatter = FilteringTextInputFormatter.digitsOnly;
 
   @override
   void initState() {
@@ -42,6 +44,13 @@ class _OtpTextFieldState extends State<OtpTextField> {
         textControllers[currentIndex].text = value;
       });
       FocusScope.of(context).requestFocus(focusNodes[currentIndex + 1]);
+    }
+
+    if (value.isEmpty && currentIndex != 0) {
+      setState(() {
+        textControllers[currentIndex].text = value;
+      });
+      FocusScope.of(context).requestFocus(focusNodes[currentIndex - 1]);
     }
   }
 
@@ -75,6 +84,7 @@ class _OtpTextFieldState extends State<OtpTextField> {
             ),
             child: TextFormField(
               controller: textControllers[index],
+              inputFormatters: [_numberFormatter],
               focusNode: focusNodes[index],
               style: const TextStyle(fontSize: 24.0, color: Color(0xff909090)),
               textAlign: TextAlign.center,

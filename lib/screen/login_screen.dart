@@ -2,6 +2,8 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:go_router/go_router.dart';
+import 'package:ovo_clone/core.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -11,6 +13,28 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+  TextEditingController emailController = TextEditingController();
+  String? email;
+  final _formKey = GlobalKey<FormState>();
+
+  _submitForm() {
+    if (!_formKey.currentState!.validate()) return false;
+    _formKey.currentState!.save();
+
+    context.goNamed(
+      'password',
+      extra: Auth(email: email!, password: ""),
+    );
+
+    // Get.offAll(PasswordScreen(item: Auth(email: email!, password: '')));
+  }
+
+  @override
+  void dispose() {
+    emailController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -44,26 +68,43 @@ class _LoginScreenState extends State<LoginScreen> {
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
-                      Image.asset('assets/image/person.png'),
+                      Container(
+                        alignment: Alignment.center,
+                        child: Image.asset('assets/image/person.png'),
+                      ),
                       const SizedBox(
                         width: 10.0,
                       ),
                       Expanded(
-                        child: TextFormField(
-                          style: const TextStyle(
-                            color: Colors.white,
-                          ),
-                          decoration: const InputDecoration(
-                            labelText: 'Enter your e-mail ID',
-                            labelStyle: TextStyle(
+                        child: Form(
+                          key: _formKey,
+                          child: TextFormField(
+                            controller: emailController,
+                            validator: Validator.email,
+                            autovalidateMode:
+                                AutovalidateMode.onUserInteraction,
+                            style: const TextStyle(
                               color: Colors.white,
                             ),
-                            enabledBorder: UnderlineInputBorder(
-                              borderSide: BorderSide(color: Colors.white),
+                            decoration: const InputDecoration(
+                              labelText: 'Enter your e-mail ID',
+                              labelStyle: TextStyle(
+                                color: Colors.white54,
+                              ),
+                              errorStyle: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: Colors.orange,
+                              ),
+                              enabledBorder: UnderlineInputBorder(
+                                borderSide: BorderSide(color: Colors.white),
+                              ),
+                              focusedBorder: UnderlineInputBorder(
+                                borderSide: BorderSide(color: Colors.white),
+                              ),
                             ),
-                            focusedBorder: UnderlineInputBorder(
-                              borderSide: BorderSide(color: Colors.white),
-                            ),
+                            onSaved: (value) {
+                              email = value;
+                            },
                           ),
                         ),
                       ),
@@ -84,7 +125,30 @@ class _LoginScreenState extends State<LoginScreen> {
                           shape: const RoundedRectangleBorder(
                               borderRadius:
                                   BorderRadius.all(Radius.circular(30)))),
-                      onPressed: () {},
+                      onPressed: () {
+                        _submitForm();
+
+                        // Router.neglect(
+                        //     context, () => context.go('/otp_verification'));
+
+                        // context.goNamed('otp');
+
+                        // context.goNamed(
+                        //   'password',
+                        //   extra: Auth(email: "asasas", password: ""),
+                        // );
+
+                        // context.goNamed('otp');
+
+                        // context.pushReplacementNamed('otp');
+
+                        // Navigator.pushReplacement(
+                        //   context,
+                        //   MaterialPageRoute(
+                        //       builder: (context) => PasswordScreen(
+                        //           item: Auth(email: "asasas", password: ""))),
+                        // );
+                      },
                       child: const Text(
                         "SIGN IN",
                         style: TextStyle(
@@ -98,8 +162,8 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                   Container(
                     margin: const EdgeInsets.only(left: 20, right: 20),
-                    child: Row(
-                      children: const [
+                    child: const Row(
+                      children: [
                         Expanded(
                           child: Divider(
                             thickness: 2,
@@ -139,7 +203,9 @@ class _LoginScreenState extends State<LoginScreen> {
                           backgroundColor: const Color(0xff00B0B7),
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(30))),
-                      onPressed: () {},
+                      onPressed: () {
+                        context.goNamed('signup');
+                      },
                       child: const Text(
                         "SIGN UP",
                         style: TextStyle(
@@ -152,7 +218,9 @@ class _LoginScreenState extends State<LoginScreen> {
                     height: 10.0,
                   ),
                   TextButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      context.goNamed('help-center');
+                    },
                     child: const Text(
                       "Need Help ?",
                       style: TextStyle(

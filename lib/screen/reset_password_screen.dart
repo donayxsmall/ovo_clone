@@ -1,10 +1,15 @@
 // ignore_for_file: camel_case_types, prefer_typing_uninitialized_variables
 
 import 'package:flutter/material.dart';
+
 import 'package:ovo_clone/core.dart';
 
 class ResetPasswordScreen extends StatefulWidget {
-  const ResetPasswordScreen({Key? key}) : super(key: key);
+  const ResetPasswordScreen({
+    Key? key,
+    required this.auth,
+  }) : super(key: key);
+  final Auth auth;
 
   @override
   State<ResetPasswordScreen> createState() => _ResetPasswordScreenState();

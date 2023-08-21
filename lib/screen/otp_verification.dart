@@ -8,26 +8,27 @@ import 'package:go_router/go_router.dart';
 
 import 'package:ovo_clone/core.dart';
 
-class OtpForgetPasswordScreen extends StatefulWidget {
-  const OtpForgetPasswordScreen({
+class OtpVerification extends StatefulWidget {
+  const OtpVerification({
     Key? key,
-    required this.auth,
+    required this.signup,
   }) : super(key: key);
-  final Auth auth;
+  final Signup signup;
 
   @override
-  State<OtpForgetPasswordScreen> createState() =>
-      _OtpForgetPasswordScreenState();
+  State<OtpVerification> createState() => _OtpVerificationState();
 }
 
-class _OtpForgetPasswordScreenState extends State<OtpForgetPasswordScreen> {
+class _OtpVerificationState extends State<OtpVerification> {
   List<String> otpList = [];
   String? otp;
-  int _seconds = 60;
+
+  int _seconds = 10;
   late Timer _timer;
 
   @override
   void initState() {
+    // TODO: implement initState
     _startTimer();
     super.initState();
   }
@@ -45,6 +46,7 @@ class _OtpForgetPasswordScreenState extends State<OtpForgetPasswordScreen> {
   }
 
   void resendOtp() {
+    print("resend otp");
     setState(() {
       _seconds = 60;
     });
@@ -60,12 +62,13 @@ class _OtpForgetPasswordScreenState extends State<OtpForgetPasswordScreen> {
       );
       ScaffoldMessenger.of(context).showSnackBar(snackBar);
     } else {
-      context.goNamed('reset-password', extra: widget.auth);
+      context.goNamed('set-password', extra: widget.signup);
     }
   }
 
   @override
   void dispose() {
+    // TODO: implement dispose
     _timer.cancel();
     super.dispose();
   }
@@ -139,7 +142,7 @@ class _OtpForgetPasswordScreenState extends State<OtpForgetPasswordScreen> {
                         ),
                       ),
                       Text(
-                        "An Authentication code has been sent to ${widget.auth.email}",
+                        "An Authentication code has been sent to ${widget.signup.email}",
                         style: const TextStyle(
                           fontSize: 12.0,
                           color: Color(0xff909090),
@@ -190,40 +193,40 @@ class _OtpForgetPasswordScreenState extends State<OtpForgetPasswordScreen> {
                                     )),
                               ),
                             ),
-                            const SizedBox(
-                              height: 15.0,
-                            ),
-                            Center(
-                              child: RichText(
-                                text: TextSpan(
-                                  children: [
-                                    const TextSpan(
-                                      text: 'Resend OTP in ?',
-                                      style: TextStyle(
-                                        fontSize: 13.0,
-                                        color: Colors.black,
-                                        fontWeight: FontWeight.w400,
-                                      ),
-                                    ),
-                                    TextSpan(
-                                      text: _seconds == 0
-                                          ? ' Resend'
-                                          : ' $_seconds seconds',
-                                      style: const TextStyle(
-                                        fontSize: 13.0,
-                                        color: Color(0xff00B0B7),
-                                        fontWeight: FontWeight.w500,
-                                      ),
-                                      recognizer: TapGestureRecognizer()
-                                        ..onTap = () {
-                                          _seconds == 0 ? resendOtp() : null;
-                                        },
-                                    )
-                                  ],
+                          ],
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 15.0,
+                      ),
+                      Center(
+                        child: RichText(
+                          text: TextSpan(
+                            children: [
+                              const TextSpan(
+                                text: 'Resend OTP in ?',
+                                style: TextStyle(
+                                  fontSize: 13.0,
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.w400,
                                 ),
                               ),
-                            ),
-                          ],
+                              TextSpan(
+                                text: _seconds == 0
+                                    ? ' Resend'
+                                    : ' $_seconds seconds',
+                                style: const TextStyle(
+                                  fontSize: 13.0,
+                                  color: Color(0xff00B0B7),
+                                  fontWeight: FontWeight.w500,
+                                ),
+                                recognizer: TapGestureRecognizer()
+                                  ..onTap = () {
+                                    _seconds == 0 ? resendOtp() : null;
+                                  },
+                              )
+                            ],
+                          ),
                         ),
                       )
                     ],

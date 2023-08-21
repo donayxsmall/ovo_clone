@@ -11,7 +11,7 @@ class MainNavigationScreen extends StatefulWidget {
 }
 
 class _MainNavigationScreenState extends State<MainNavigationScreen> {
-  int selectedIndex = 3;
+  int selectedIndex = 0;
   updateIndex(int newIndex) {
     selectedIndex = newIndex;
     setState(() {});
@@ -61,12 +61,12 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
                     gradient: LinearGradient(
-                      begin: Alignment.bottomCenter,
-                      end: Alignment.topCenter,
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomRight,
                       // transform: GradientRotation(90),
                       colors: [
-                        const Color(0xffDD58D6).withOpacity(0.5),
                         const Color(0xff40128B),
+                        const Color(0xffDD58D6).withOpacity(0.5),
                       ],
                     ),
                   ),

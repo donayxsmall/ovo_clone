@@ -1,11 +1,10 @@
-// ignore_for_file: camel_case_types, prefer_typing_uninitialized_variables
-
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import 'package:ovo_clone/core.dart';
 
-class XPasswordField extends StatefulWidget {
-  const XPasswordField({
+class XNumberField extends StatefulWidget {
+  const XNumberField({
     Key? key,
     required this.label,
     required this.icon,
@@ -21,12 +20,12 @@ class XPasswordField extends StatefulWidget {
   final Function(String?)? onSaved;
 
   @override
-  State<XPasswordField> createState() => _XPasswordFieldState();
+  State<XNumberField> createState() => _XNumberFieldState();
 }
 
-class _XPasswordFieldState extends State<XPasswordField> {
+class _XNumberFieldState extends State<XNumberField> {
   TextEditingController textEditingController = TextEditingController();
-  bool obsecure = true;
+  final _numberFormatter = FilteringTextInputFormatter.digitsOnly;
 
   @override
   void dispose() {
@@ -48,10 +47,13 @@ class _XPasswordFieldState extends State<XPasswordField> {
         ),
         Expanded(
           child: TextFormField(
-            controller: textEditingController,
             autovalidateMode: AutovalidateMode.onUserInteraction,
+            controller: textEditingController,
+            inputFormatters: [
+              _numberFormatter
+            ], // Menggunakan TextInputFormatter
+            keyboardType: TextInputType.number,
             validator: widget.validator,
-            obscureText: obsecure,
             style: const TextStyle(
               color: Colors.black,
             ),
@@ -63,15 +65,6 @@ class _XPasswordFieldState extends State<XPasswordField> {
               ),
               focusedBorder: UnderlineInputBorder(
                 borderSide: BorderSide(color: primaryColor),
-              ),
-              suffixIcon: IconButton(
-                onPressed: () {
-                  obsecure = !obsecure;
-                  setState(() {});
-                },
-                icon: obsecure
-                    ? const Icon(Icons.visibility_off)
-                    : const Icon(Icons.visibility),
               ),
             ),
             onChanged: (value) {

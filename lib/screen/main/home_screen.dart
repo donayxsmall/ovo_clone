@@ -3,6 +3,7 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:go_router/go_router.dart';
 import 'package:ovo_clone/core.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -181,7 +182,9 @@ class _HomeScreenState extends State<HomeScreen> {
                             buildItem(
                               image: Image.asset('assets/image/transfer.png'),
                               label: 'Transfer',
-                              onTap: () {},
+                              onTap: () {
+                                context.goNamed('secure-code');
+                              },
                             ),
                             buildItem(
                               image: Image.asset('assets/image/history.png'),
@@ -208,55 +211,53 @@ class _HomeScreenState extends State<HomeScreen> {
             child: SingleChildScrollView(
               child: Column(
                 children: [
-                  Container(
-                    child: Card(
-                      child: Container(
-                        padding: const EdgeInsets.all(10.0),
-                        child: GridView.builder(
-                          padding: EdgeInsets.zero,
-                          gridDelegate:
-                              const SliverGridDelegateWithFixedCrossAxisCount(
-                            childAspectRatio: 1,
-                            crossAxisCount: 4,
-                            mainAxisSpacing: 20,
-                            crossAxisSpacing: 6,
-                          ),
-                          itemCount: menus.length,
-                          shrinkWrap: true,
-                          physics: const ScrollPhysics(),
-                          itemBuilder: (BuildContext context, int index) {
-                            var item = menus[index];
-                            return InkWell(
-                              onTap: item["onTap"],
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  CircleAvatar(
-                                    backgroundColor: item["bgColor"],
-                                    child: Image.asset(
-                                      "${item['icon']}",
-                                    ),
-                                  ),
-                                  const SizedBox(
-                                    height: 4.0,
-                                  ),
-                                  Expanded(
-                                    child: Text(
-                                      "${item['label']}",
-                                      textAlign: TextAlign.center,
-                                      overflow: TextOverflow.clip,
-                                      style: TextStyle(
-                                        color: Colors.black,
-                                        fontSize: screenWidth * 0.03,
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            );
-                          },
+                  Card(
+                    child: Container(
+                      padding: const EdgeInsets.all(10.0),
+                      child: GridView.builder(
+                        padding: EdgeInsets.zero,
+                        gridDelegate:
+                            const SliverGridDelegateWithFixedCrossAxisCount(
+                          childAspectRatio: 1,
+                          crossAxisCount: 4,
+                          mainAxisSpacing: 20,
+                          crossAxisSpacing: 6,
                         ),
+                        itemCount: menus.length,
+                        shrinkWrap: true,
+                        physics: const ScrollPhysics(),
+                        itemBuilder: (BuildContext context, int index) {
+                          var item = menus[index];
+                          return InkWell(
+                            onTap: item["onTap"],
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                CircleAvatar(
+                                  backgroundColor: item["bgColor"],
+                                  child: Image.asset(
+                                    "${item['icon']}",
+                                  ),
+                                ),
+                                const SizedBox(
+                                  height: 4.0,
+                                ),
+                                Expanded(
+                                  child: Text(
+                                    "${item['label']}",
+                                    textAlign: TextAlign.center,
+                                    overflow: TextOverflow.clip,
+                                    style: TextStyle(
+                                      color: Colors.black,
+                                      fontSize: screenWidth * 0.03,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          );
+                        },
                       ),
                     ),
                   ),

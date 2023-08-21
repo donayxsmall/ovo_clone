@@ -9,12 +9,14 @@ class XTextField extends StatefulWidget {
     required this.icon,
     this.validator,
     required this.onChanged,
+    this.onSaved,
   }) : super(key: key);
 
   final String label;
   final IconData icon;
   final String? Function(String?)? validator;
   final Function(String) onChanged;
+  final Function(String?)? onSaved;
 
   @override
   State<XTextField> createState() => _XTextFieldState();
@@ -43,6 +45,7 @@ class _XTextFieldState extends State<XTextField> {
         ),
         Expanded(
           child: TextFormField(
+            autovalidateMode: AutovalidateMode.onUserInteraction,
             controller: textEditingController,
             validator: widget.validator,
             style: const TextStyle(
@@ -60,6 +63,9 @@ class _XTextFieldState extends State<XTextField> {
             ),
             onChanged: (value) {
               widget.onChanged(value);
+            },
+            onSaved: (value) {
+              widget.onSaved!(value);
             },
           ),
         )

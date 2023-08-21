@@ -3,10 +3,15 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:ovo_clone/screen/forget_password_screen.dart';
+import 'package:go_router/go_router.dart';
+import 'package:ovo_clone/core.dart';
 
 class PasswordScreen extends StatefulWidget {
-  const PasswordScreen({Key? key}) : super(key: key);
+  const PasswordScreen({
+    Key? key,
+    required this.item,
+  }) : super(key: key);
+  final Auth item;
 
   @override
   State<PasswordScreen> createState() => _PasswordScreenState();
@@ -15,6 +20,20 @@ class PasswordScreen extends StatefulWidget {
 class _PasswordScreenState extends State<PasswordScreen> {
   TextEditingController passwordController = TextEditingController();
   bool obsecure = true;
+  String? password;
+  final _formKey = GlobalKey<FormState>();
+
+  _doLogin() async {
+    if (!_formKey.currentState!.validate()) return false;
+    _formKey.currentState!.save();
+
+    String email = widget.item.email;
+
+    if (email != "" && password != "") {
+      UserService().doLogin(widget.item.toMap());
+      context.goNamed('dashboard');
+    }
+  }
 
   @override
   void dispose() {
@@ -64,31 +83,44 @@ class _PasswordScreenState extends State<PasswordScreen> {
                         width: 10.0,
                       ),
                       Expanded(
-                        child: TextFormField(
-                          style: const TextStyle(
-                            color: Colors.white,
-                          ),
-                          controller: passwordController,
-                          obscureText: obsecure,
-                          decoration: InputDecoration(
-                            labelText: 'Enter your password',
-                            labelStyle: const TextStyle(
-                                color: Colors.white, height: 0.2),
-                            enabledBorder: const UnderlineInputBorder(
-                              borderSide: BorderSide(color: Colors.white),
+                        child: Form(
+                          key: _formKey,
+                          child: TextFormField(
+                            style: const TextStyle(
+                              color: Colors.white,
                             ),
-                            focusedBorder: const UnderlineInputBorder(
-                              borderSide: BorderSide(color: Colors.white),
+                            controller: passwordController,
+                            validator: Validator.required,
+                            autovalidateMode:
+                                AutovalidateMode.onUserInteraction,
+                            obscureText: obsecure,
+                            decoration: InputDecoration(
+                              labelText: 'Enter your password',
+                              labelStyle: const TextStyle(
+                                  color: Colors.white, height: 0.2),
+                              errorStyle: const TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: Colors.orange,
+                              ),
+                              enabledBorder: const UnderlineInputBorder(
+                                borderSide: BorderSide(color: Colors.white),
+                              ),
+                              focusedBorder: const UnderlineInputBorder(
+                                borderSide: BorderSide(color: Colors.white),
+                              ),
+                              suffixIcon: IconButton(
+                                onPressed: () {
+                                  obsecure = !obsecure;
+                                  setState(() {});
+                                },
+                                icon: obsecure
+                                    ? const Icon(Icons.visibility_off)
+                                    : const Icon(Icons.visibility),
+                              ),
                             ),
-                            suffixIcon: IconButton(
-                              onPressed: () {
-                                obsecure = !obsecure;
-                                setState(() {});
-                              },
-                              icon: obsecure
-                                  ? const Icon(Icons.visibility_off)
-                                  : const Icon(Icons.visibility),
-                            ),
+                            onSaved: (value) {
+                              password = value;
+                            },
                           ),
                         ),
                       ),
@@ -105,7 +137,9 @@ class _PasswordScreenState extends State<PasswordScreen> {
                           backgroundColor: const Color(0xff00B0B7),
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(30))),
-                      onPressed: () {},
+                      onPressed: () {
+                        _doLogin();
+                      },
                       child: const Text(
                         "LOGIN",
                         style: TextStyle(
@@ -132,12 +166,7 @@ class _PasswordScreenState extends State<PasswordScreen> {
                           ),
                           recognizer: TapGestureRecognizer()
                             ..onTap = () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) =>
-                                        const ForgetPasswordScreen()),
-                              );
+                              context.goNamed('forget-password');
                             },
                         )
                       ],

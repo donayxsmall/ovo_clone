@@ -1,5 +1,6 @@
 // ignore_for_file: camel_case_types, prefer_typing_uninitialized_variables
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 
@@ -43,21 +44,28 @@ class _CarouselMenuState extends State<CarouselMenu> {
                 builder: (BuildContext context) {
                   return InkWell(
                     onTap: imageUrl['onTap'],
-                    child: Container(
-                      width: MediaQuery.of(context).size.width,
-                      margin: const EdgeInsets.symmetric(horizontal: 5.0),
-                      decoration: BoxDecoration(
-                        color: Colors.amber,
-                        borderRadius: const BorderRadius.all(
-                          Radius.circular(6.0),
-                        ),
-                        image: DecorationImage(
-                          image: NetworkImage(
-                            imageUrl['image'],
+                    child: CachedNetworkImage(
+                      imageUrl: imageUrl['image'],
+                      imageBuilder: (context, imageProvider) => Container(
+                        width: MediaQuery.of(context).size.width,
+                        margin: const EdgeInsets.symmetric(horizontal: 5.0),
+                        decoration: BoxDecoration(
+                          color: Colors.amber,
+                          borderRadius: const BorderRadius.all(
+                            Radius.circular(6.0),
                           ),
-                          fit: BoxFit.cover,
+                          image: DecorationImage(
+                            image: imageProvider,
+                            fit: BoxFit.cover,
+                          ),
                         ),
                       ),
+                      placeholder: (context, url) => Container(
+                        alignment: Alignment.center,
+                        child: const CircularProgressIndicator(),
+                      ),
+                      errorWidget: (context, url, error) =>
+                          const Icon(Icons.error),
                     ),
                   );
                 },

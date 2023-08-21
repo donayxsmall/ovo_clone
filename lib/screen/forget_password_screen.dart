@@ -1,6 +1,7 @@
 // ignore_for_file: camel_case_types, prefer_typing_uninitialized_variables
 
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:ovo_clone/core.dart';
 
 class ForgetPasswordScreen extends StatefulWidget {
@@ -11,14 +12,18 @@ class ForgetPasswordScreen extends StatefulWidget {
 }
 
 class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
-  TextEditingController passwordController = TextEditingController();
   bool obsecure = true;
-  final FocusNode _focusNode = FocusNode();
 
-  @override
-  void dispose() {
-    passwordController.dispose();
-    super.dispose();
+  final _formKey = GlobalKey<FormState>();
+  String? email;
+
+  doSendOtp() {
+    final form = _formKey.currentState;
+    if (form == null || !form.validate()) return;
+    form.save();
+    final auth = Auth(email: email!);
+
+    context.goNamed('otp-forget-password', extra: auth);
   }
 
   @override
@@ -30,7 +35,7 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
           elevation: 0,
           leading: InkWell(
             onTap: () {
-              Navigator.of(context);
+              Navigator.pop(context);
             },
             child: Image.asset('assets/image/arrow_back.png'),
           ),
@@ -102,30 +107,17 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
                         Row(
                           crossAxisAlignment: CrossAxisAlignment.end,
                           children: [
-                            Icon(
-                              Icons.email,
-                              color: primaryColor,
-                            ),
-                            const SizedBox(
-                              width: 10.0,
-                            ),
                             Expanded(
-                              child: TextFormField(
-                                focusNode: _focusNode,
-                                style: const TextStyle(
-                                  color: Colors.black,
-                                ),
-                                decoration: InputDecoration(
-                                  labelText: 'Enter your e-mail ID',
-                                  labelStyle: TextStyle(
-                                      height: 0.07,
-                                      color: Colors.black,
-                                      fontWeight: _focusNode.hasFocus
-                                          ? FontWeight.bold
-                                          : FontWeight.normal),
-                                  focusedBorder: UnderlineInputBorder(
-                                    borderSide: BorderSide(color: primaryColor),
-                                  ),
+                              child: Form(
+                                key: _formKey,
+                                child: XTextField(
+                                  label: 'Enter your e-mail ID',
+                                  validator: Validator.email,
+                                  icon: Icons.email,
+                                  onChanged: (value) {},
+                                  onSaved: (value) {
+                                    email = value;
+                                  },
                                 ),
                               ),
                             )
@@ -144,12 +136,7 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
                                   shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(10))),
                               onPressed: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) =>
-                                          const OtpForgetPasswordScreen()),
-                                );
+                                doSendOtp();
                               },
                               child: const Text(
                                 "SEND OTP",
